@@ -131,13 +131,21 @@ def resolver(sudoku):
         flag = 0
         indexes = find_zeros(sudoku)
 
+        missing_min_length = 9
+        missing_min_index = [0, 0]
+
         for index in indexes:
             #print("index",index[1])
             missing = find_missing(sudoku, index[0], index[1])
 
             #missing = find_missing(sudoku,1,8)
 
-            print("index ", index," mozliwe wartosci " , missing)
+            if len(missing) < missing_min_length:
+                missing_min_length = len(missing)
+                missing_min_index = index
+
+            #print("index ", index," mozliwe wartosci " , missing)
+            print("index ", index," mozliwe ", str(len(missing)), " wartosci " , missing)
 
             if(len(missing)==1):
                 print("jedyna wartosc tutaj to", missing[0])
@@ -169,6 +177,14 @@ def resolver(sudoku):
             print("linia1",linia1)
             print("w liniach", linia1.count(3))
             '''
+
+            missing = find_missing(sudoku, missing_min_index[0], missing_min_index[1])
+            print("index ", missing_min_index," mozliwe ", str(len(missing)), " wartosci " , missing)
+
+            for m in range(0, len(missing)):
+                sudoku[missing_min_index[0]][missing_min_index[1]]=str(missing[m])
+                resolver(sudoku)
+
             return sudoku
 
             #print(" mozliwe wartosci " + find_missing(sudoku, index[0]+1, index[1]+1))
