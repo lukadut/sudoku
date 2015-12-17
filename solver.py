@@ -52,23 +52,30 @@ def find_missing(sudoku, y, x):
     for i in range(0,3):
         kwadrat=""
         for j in range(0,3):
-            print("DEBUG",(i + y_*3),(j + x_*3), sudoku[i + y_*3][j + x_*3])
+            #print("DEBUG",(i + y_*3),(j + x_*3), sudoku[i + y_*3][j + x_*3])
             number = int( sudoku[i + y_*3][j + x_*3])
             kwadrat+=sudoku[i + y_*3][j + x_*3]
             if (number >0):
                 numbers[number-1] +=1
-        print("kwadrat",kwadrat)
+                #print("DEBUG zwiekszam",number-1)
+        #print("kwadrat",kwadrat)
     linia1= ""
     linia2 = ""
     for i in range (0,9):
         number = int(sudoku[i][x])
-        numbers[number-1] +=1
+        if (number >0):
+            numbers[number-1] +=1
+            #print("DEBUG zwiekszam pion",number-1)
         number = int(sudoku[y][i])
-        numbers[number-1] +=1
+        if (number >0):
+            numbers[number-1] +=1
+            #print("DEBUG zwiekszam poziom",number-1)
 
         linia1+=sudoku[i][x]
         linia2+=sudoku[y][i]
-    print("DEBUG dla x=",x, " y=",y, "LINIA 1", linia1, "LINIA2", linia2)
+    #print("DEBUG dla x=",x, " y=",y, "LINIA 1", linia1, "LINIA2", linia2)
+
+    #print("numbers",numbers)
 
     for i in range(0,9):
         if(x == 1 and y==4):
@@ -95,27 +102,34 @@ def find_zero(sudoku):
 
 def resolver(sudoku):
     indexes = find_zeros(sudoku)
+    print("liczba zer", len(indexes))
 
+    while(len(find_zeros(sudoku))>0):
+        flag = 0
+        indexes = find_zeros(sudoku)
+        for index in indexes:
+            #print("index",index[1])
+            missing = find_missing(sudoku, index[0], index[1])
+            #missing = find_missing(sudoku,1,8)
 
-    for index in indexes:
-        #print("index",index[1])
-        missing = find_missing(sudoku, index[0], index[1])
-        #missing = find_missing(sudoku,1,8)
+            print("index ", index," mozliwe wartosci " , missing)
+            if(len(missing)==1):
+                print("jedyna wartosc tutaj to", missing[0])
+                flag=1
+                string=""
+               # print(string + str(missing[0]))
+                sudoku[index[0]][index[1]]=str(missing[0])
+            else:
+                string=""
+        if(flag ==0):
+            print("nie umiem")
+            return sudoku
 
-        print("index ", index," mozliwe wartosci " , missing)
-        if(len(missing)==1):
-            print("jedyna wartosc tutaj to", missing[0])
-            string=""
-            print(string + str(missing[0]))
-            sudoku[index[0]][index[1]]=str(missing[0])
-        else:
-            string=""
+            #print(" mozliwe wartosci " + find_missing(sudoku, index[0]+1, index[1]+1))
+            #print(sudoku[index[0]][index[1]])
 
-        #print(" mozliwe wartosci " + find_missing(sudoku, index[0]+1, index[1]+1))
-        #print(sudoku[index[0]][index[1]])
-
-        #sudoku[index[0]][index[1]]=""
-        #index = find_zeros(sudoku)
+            #sudoku[index[0]][index[1]]=""
+            #index = find_zeros(sudoku)
     return sudoku
 
 
@@ -130,9 +144,11 @@ if __name__ == '__main__':
 
     #sudoku = resolver(sudoku)
     #print("###################")
-    #sudoku = resolver(sudoku)
+    sudoku = resolver(sudoku)
 
     print_sudoku(sudoku)
+    b = find_missing(sudoku,3,7)
+    #print(b)
 
 
 
