@@ -1,4 +1,5 @@
 import math
+
 def read_file(filename):
 
     with open(filename,'r') as f:
@@ -37,6 +38,7 @@ def print_sudoku(data):
         if(delim.__len__() > 0):
             delim+="--"
             print(delim)
+
 def get_square(sudoku, y, x):
     values = []
     x_ = math.floor(x/3)
@@ -167,7 +169,7 @@ def resolver(sudoku):
 
                 string=""
 
-        if(flag ==0):
+        if(flag == 0):
             print("nie umiem",index)
             '''
             print("dd",possible_values)
@@ -182,20 +184,25 @@ def resolver(sudoku):
             print("index ", missing_min_index," mozliwe ", str(len(missing)), " wartosci " , missing)
 
             for m in range(0, len(missing)):
-                sudoku[missing_min_index[0]][missing_min_index[1]]=str(missing[m])
-                resolver(sudoku)
+                sudoku_copy = sudoku
+                sudoku_copy[missing_min_index[0]][missing_min_index[1]]=str(missing[m])
+                sudoku_result = resolver(sudoku_copy)
 
-            return sudoku
+                if(len(find_zeros(sudoku_result))==0):
+                    return sudoku_result
+
+            #return sudoku
 
             #print(" mozliwe wartosci " + find_missing(sudoku, index[0]+1, index[1]+1))
             #print(sudoku[index[0]][index[1]])
 
             #sudoku[index[0]][index[1]]=""
             #index = find_zeros(sudoku)
+
+    #if(len(find_zeros(sudoku))==0):
+    #    solution = sudoku
+
     return sudoku
-
-
-
 
 if __name__ == '__main__':
     input = "sudoku.txt"
@@ -209,6 +216,7 @@ if __name__ == '__main__':
     sudoku = resolver(sudoku)
 
     print_sudoku(sudoku)
+
     #b = find_missing(sudoku,3,7)
     #print(b)
 '''
