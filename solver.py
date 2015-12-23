@@ -1,7 +1,7 @@
+import copy
 import math
 
 def read_file(filename):
-
     with open(filename,'r') as f:
         data=[list(line.rstrip().ljust(9,'0')) for line in f]
 
@@ -20,7 +20,6 @@ def read_file(filename):
     return data
 
 def print_sudoku(data):
-
     for j in range(0,9):
         line=""
         delim=""
@@ -59,10 +58,9 @@ def get_line(sudoku,y,x):
 def find_missing(sudoku, y, x):
     missing = []
     if(sudoku[y][x]!="0"):
-        print("ERROR dla x=",x, " y=",y, sudoku[y][x])
+        #print("ERROR dla x=",x, " y=",y, sudoku[y][x])
         return missing
 
-    debugValues = list(range(1,10))
     numbers = [0]*9;
     square = get_square(sudoku,y,x)
     #print("square",square)
@@ -89,13 +87,13 @@ def find_missing(sudoku, y, x):
 
         liniaV+=vertical[i]
         liniaH+=horizontal[i]
-    print("DEBUG dla x=",x, " y=",y, "liniaV ", liniaV, "liniaH", liniaH)
+    #print("DEBUG dla x=",x, " y=",y, "liniaV ", liniaV, "liniaH", liniaH)
 
     #print("numbers",numbers)
 
     for i in range(0,9):
-        if(x == 1 and y==4):
-            print("######DEBUG$$$$$", numbers)
+        # if(x == 1 and y==4):
+        #     print("######DEBUG$$$$$", numbers)
         if (numbers[i]==0):
             missing.append(i+1)
     #print(missing)
@@ -118,11 +116,11 @@ def find_zero(sudoku):
 
 def resolver(sudoku):
     indexes = find_zeros(sudoku)
-    print("liczba zer", len(indexes))
+    #print("liczba zer", len(indexes))
 
     possible_values = ['']*9
     for x in range(0,9):
-        print(x)
+        #print(x)
         possible_values[x]= ['']*9
 
     for index in indexes:
@@ -137,70 +135,34 @@ def resolver(sudoku):
         missing_min_index = [0, 0]
 
         for index in indexes:
-            #print("index",index[1])
             missing = find_missing(sudoku, index[0], index[1])
-
-            #missing = find_missing(sudoku,1,8)
 
             if len(missing) < missing_min_length:
                 missing_min_length = len(missing)
                 missing_min_index = index
 
-            #print("index ", index," mozliwe wartosci " , missing)
-            print("index ", index," mozliwe ", str(len(missing)), " wartosci " , missing)
+            #print("index ", index," mozliwe ", str(len(missing)), " wartosci " , missing)
 
             if(len(missing)==1):
-                print("jedyna wartosc tutaj to", missing[0])
+                #print("jedyna wartosc tutaj to", missing[0])
                 flag=1
-                string=""
-               # print(string + str(missing[0]))
                 sudoku[index[0]][index[1]]=str(missing[0])
-            else:
-
-#                for value in missing:
-#                    line1, line2 = get_line(possible_values,index[0],index[1])
-#                    square = get_square(possible_values,index[0],index[1])
-#                    if(line1.count(value)==1):
-#                        sudoku[index[0]][index[1]]=str(value)
-#                    if(line2.count(value==1)):
-#                        sudoku[index[0]][index[1]]=str(value)
-#                    if(square.count(value)==1):
-#                        sudoku[index[0]][index[1]]=str(value)
-
-                string=""
 
         if(flag == 0):
-            print("nie umiem",index)
-            '''
-            print("dd",possible_values)
-            print("getlinia sudoku",get_line(sudoku,index[0],index[1]))
-            print("getlinia possie",get_line(possible_values,index[0],index[1]))
-            linia1, linia2 = get_line(possible_values,index[0],index[1])
-            print("linia1",linia1)
-            print("w liniach", linia1.count(3))
-            '''
+            #print("nie umiem",index)
 
             missing = find_missing(sudoku, missing_min_index[0], missing_min_index[1])
-            print("index ", missing_min_index," mozliwe ", str(len(missing)), " wartosci " , missing)
+            #print("index ", missing_min_index," mozliwe ", str(len(missing)), " wartosci " , missing)
 
             for m in range(0, len(missing)):
-                sudoku_copy = sudoku
+                sudoku_copy = copy.deepcopy(sudoku)
                 sudoku_copy[missing_min_index[0]][missing_min_index[1]]=str(missing[m])
                 sudoku_result = resolver(sudoku_copy)
 
                 if(len(find_zeros(sudoku_result))==0):
                     return sudoku_result
 
-            #return sudoku
-
-            #print(" mozliwe wartosci " + find_missing(sudoku, index[0]+1, index[1]+1))
-            #print(sudoku[index[0]][index[1]])
-
-            #sudoku[index[0]][index[1]]=""
-            #index = find_zeros(sudoku)
-
-    #if(len(find_zeros(sudoku))==0):
-    #    solution = sudoku
+            return sudoku
 
     return sudoku
 
@@ -209,21 +171,9 @@ if __name__ == '__main__':
     sudoku = read_file(input)
     print_sudoku(sudoku)
 
-    #find_missing(sudoku,0,7)
+    print("\n#####################")
+    print("Trwa rozwiązywanie...")
+    print("#####################\n")
 
-    #sudoku = resolver(sudoku)
-    #print("###################")
     sudoku = resolver(sudoku)
-
     print_sudoku(sudoku)
-
-    #b = find_missing(sudoku,3,7)
-    #print(b)
-'''
-    for i in range(0,9):
-        for j in range (0,9):
-            print(i,j,get_line(sudoku,i,j))
-
-'''
-
-
